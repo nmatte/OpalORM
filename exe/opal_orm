@@ -1,0 +1,5 @@
+#!/usr/bin/env ruby -wU
+
+require 'opal_orm'
+
+OpalORM::IDontKnowWhatThisIs.start(ARGV)

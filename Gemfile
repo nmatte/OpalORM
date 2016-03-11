@@ -4,3 +4,4 @@ source 'https://rubygems.org'
 gemspec
 require 'pry'
 require 'thor'
+require 'rspec'

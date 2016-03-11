@@ -3,3 +3,6 @@
 require 'opal_orm'
 
 OpalORM::IDontKnowWhatThisIs.start(ARGV)
+
+puts ROOT_FOLDER = File.join(File.dirname(__FILE__), '..')
+puts Dir.pwd

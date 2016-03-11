@@ -19,6 +19,7 @@ class DBConnection
 
   def self.make_config
     unless Dir.exists?('db')
+    end
     unless File.exists?(CONFIG_PATH)
       File.open(CONFIG_PATH, 'r')
     end

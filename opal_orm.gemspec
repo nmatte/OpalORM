@@ -31,6 +31,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_runtime_dependency 'sqlite3', '1.3.11'
+  spec.add_runtime_dependency 'yml'
   spec.add_dependency 'thor','0.19.1'
 
   spec.add_development_dependency "bundler", "~> 1.11"

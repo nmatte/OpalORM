@@ -1,5 +1,6 @@
 require 'sqlite3'
 require 'json'
+require_relative 'util'
 PRINT_QUERIES = ENV['PRINT_QUERIES'] == 'true'
 # https://tomafro.net/2010/01/tip-relative-paths-with-file-expand-path
 # ROOT_FOLDER = File.join(File.dirname(__FILE__), '..')
@@ -17,9 +18,7 @@ module OpalORM
     end
 
     def self.make_config
-      unless Dir.exists?(DB_PATH)
-        Dir.mkdir('db')
-      end
+      Util.ensure_db_dir
 
       unless File.exists?(CONFIG_PATH)
         File.new(CONFIG_PATH, 'w')

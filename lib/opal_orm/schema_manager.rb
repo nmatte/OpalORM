@@ -1,10 +1,11 @@
+require_relative 'util'
+
 module OpalORM
   class SchemaManager
-    CURRENT_PATH = Dir.pwd
-    DB_PATH = File.join(CURRENT_PATH, 'db')
+    Util.ensure_db_dir
 
     def self.generate(file_name, *table_names)
-      schema_path = File.join(DB_PATH, "#{file_name}.rb")
+      schema_path = File.join(Util.db_path, "#{file_name}.rb")
       if File.exist?(schema_path)
         raise FileExistsError, "#{name}.rb already exists. Please choose a different filename."
       else

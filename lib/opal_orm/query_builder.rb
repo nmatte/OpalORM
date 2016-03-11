@@ -5,6 +5,8 @@ class QueryBuilder
     manager.finalize!
   end
 
+  attr_reader :query
+
   def initialize(name)
     @table_name = name
     @columns = []
@@ -35,6 +37,6 @@ class QueryBuilder
     end
     queryEnd = ");"
 
-    queryStart + columnQueries.join("\n") + queryEnd
+    @query = queryStart + columnQueries.join("\n") + queryEnd
   end
 end

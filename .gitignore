@@ -7,4 +7,5 @@
 /pkg/
 /spec/reports/
 /tmp/
-opal_orm-0.1.0.gem
+/db/
+opal_orm-*.gem

@@ -1,5 +1,8 @@
 require 'thor'
 require_relative 'query_builder'
+require_relative 'db_connection'
+require_relative 'schema_manager'
+
 module OpalORM
   class DatabaseManager < Thor
     # desc "hello NAME", "This will greet you"
@@ -24,12 +27,25 @@ module OpalORM
 
     desc "create DATABASE_NAME", "Create the database to be used by OpalORM"
     long_desc <<-CREATE
-    Say stuff here
-
+    Create an empty database in the current directory with the name
+    provided, and save the database name to db/opal_config.json.
     CREATE
 
     def create(name)
-      puts name
+      DBConnection.open("#{name}.db")
+    end
+
+    desc "generate TABLE1 TABLE2 ... ", "Create a blank schema file to be edited"
+    long_desc <<-CREATE
+    Create a blank schema file called schema.rb. In it you can use the OpalORM
+    DSL to create tables with different datatypes.
+    Then create the schema with `db make`.
+    You may optionally pass the table names that you want to create. Otherwise you
+    will have to add them yourself.
+    CREATE
+
+    def generate(file_name, *table_names)
+      OpalORM::SchemaManager.generate(file_name, *table_names)
     end
   end
 

@@ -58,9 +58,9 @@ end
       RB
     end
 
-    def self.create_table(table_name, &prc)
+    def create_table(table_name, &prc)
       q = QueryBuilder.create_table_query(table_name, &prc)
-
+      puts q
     end
 
   end

@@ -35,7 +35,7 @@ module OpalORM
       DBConnection.open("#{name}.db")
     end
 
-    desc "generate TABLE1 TABLE2 ... ", "Create a blank schema file to be edited"
+    desc "generate SCHEMA_NAME TABLE1 TABLE2 ... ", "Create a blank schema file to be edited"
     long_desc <<-CREATE
     Create a blank schema file called schema.rb. In it you can use the OpalORM
     DSL to create tables with different datatypes.
@@ -46,6 +46,9 @@ module OpalORM
 
     def generate(file_name, *table_names)
       OpalORM::SchemaManager.generate(file_name, *table_names)
+    rescue FileExistsError => e
+      puts e.message
+      puts "Aborting."
     end
   end
 

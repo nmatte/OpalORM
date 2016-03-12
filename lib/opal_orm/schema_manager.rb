@@ -4,6 +4,10 @@ module OpalORM
   class SchemaManager
     Util.ensure_db_dir
 
+    def self.test
+      puts "test"
+    end
+
     def self.generate(file_name, *table_names)
       schema_path = File.join(Util.db_path, "#{file_name}.rb")
       if File.exist?(schema_path)
@@ -14,7 +18,7 @@ module OpalORM
           contents = ""
           if table_names.empty?
             contents = <<-RB
-              SchemaManager.create_table("table_name") do |t|
+              OpalORM::SchemaManager.create_table("table_name") do |t|
               end
             RB
           else
@@ -40,6 +44,10 @@ end
           puts "Done."
         end
       end
+    end
+
+    def self.create_table(table_name, &prc)
+      puts "did some thangs"
     end
 
   end

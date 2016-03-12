@@ -35,6 +35,9 @@ module OpalORM
     rescue FileExistsError => e
       puts e.message
       puts "Aborting."
+    rescue ForeignKeyMissingError => e
+      puts e.message
+      puts "Aborting."
     end
   end
 

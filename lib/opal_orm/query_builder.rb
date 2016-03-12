@@ -1,9 +1,12 @@
+require 'active_support/inflector'
+
 module OpalORM
   class QueryBuilder
     def self.create_table_query(name, &prc)
       manager = new(name)
       prc.call(manager)
-      manager.finalize!
+
+      manager.build!
     end
 
     attr_reader :query
@@ -22,24 +25,51 @@ module OpalORM
       @columns << {type: :integer, name: name, options: options}
     end
 
-    def finalize!
-      queryStart = "CREATE TABLE #{@table_name} ("
+    def foreign_key(ref_name)
+      @foreign_keys << ref_name
+    end
 
-      columnQueries = @columns.map do |colInfo|
-        result = ""
+    def build!
+      query_start = "CREATE TABLE #{@table_name} ("
+      column_queries = @columns.map do |colInfo|
+        result = []
         case colInfo[:type]
         when :string
           result = "#{colInfo[:name]} VARCHAR(255) "
         when :integer
           result = "#{colInfo[:name]} INTEGER "
         end
-
+        unless colInfo[:options].nil?
+          colInfo[:options].each do |key|
+            case colInfo[:options]
+            when :null
+              result += "NOT NULL" unless colInfo[:options][:null]
+            end
+          end
+        end
         result
       end
-      queryEnd = ");"
+      column_queries.unshift("id INTEGER PRIMARY KEY")
 
-      @query = queryStart + columnQueries.join("\n") + queryEnd
+      foreign_keys = @foreign_keys.map do |ref_name|
+        if foreign_key_valid?(ref_name)
+          "FOREIGN KEY(#{ref_name}) REFERENCES #{@table_name.singularize}(id)"
+        else
+          raise ForeignKeyMissingError, "Error adding foreign key contsraint for #{ref_name}: couldn't find column named #{ref_name}."
+        end
+      end
+
+      query_end = ");"
+
+      @query = query_start + column_queries.concat(foreign_keys).join(",\n") + query_end
       @query
     end
+
+    def foreign_key_valid?(key)
+      @columns.any? {|col| key == col[:name]}
+    end
+  end
+
+  class ForeignKeyMissingError < StandardError
   end
 end

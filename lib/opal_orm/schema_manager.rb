@@ -1,5 +1,5 @@
 require_relative 'util'
-
+require_relative 'query_builder'
 module OpalORM
   class SchemaManager
     Util.ensure_db_dir
@@ -15,14 +15,14 @@ module OpalORM
       else
         puts "Creating file 'db/schema.rb' ..."
         File.open(schema_path, "w+") do |f|
-          contents = ""
+          contents = []
           if table_names.empty?
-            contents = <<-RB
+            contents << <<-RB
               OpalORM::SchemaManager.create_table("table_name") do |t|
               end
             RB
           else
-            contents = table_names.map do |table_name|
+            contents += table_names.map do |table_name|
               puts "adding table #{table_name} ..."
               <<-RB
 SchemaManager.create_table \'#{table_name}\' do |t|
@@ -30,7 +30,7 @@ SchemaManager.create_table \'#{table_name}\' do |t|
 end
 
               RB
-            end
+          end
             contents.unshift(<<-RB)
 # Example usage:
 # SchemaManager.create_table 'table_name' do |t|
@@ -40,6 +40,7 @@ end
 # The primary key will be created automatically, with name 'id'.
             RB
           end
+          p contents
           f.write(contents.join)
           puts "Done."
         end
@@ -47,7 +48,7 @@ end
     end
 
     def self.create_table(table_name, &prc)
-      puts "did some thangs"
+      puts QueryBuilder.create_table_query(table_name, &prc)
     end
 
   end

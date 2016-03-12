@@ -39,6 +39,7 @@ module OpalORM
       queryEnd = ");"
 
       @query = queryStart + columnQueries.join("\n") + queryEnd
+      @query
     end
   end
 end

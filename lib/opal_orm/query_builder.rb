@@ -25,9 +25,9 @@ module OpalORM
       @columns << {type: :integer, name: name, options: options}
     end
 
-    def foreign_key(ref_name)
-      @foreign_keys << ref_name
-    end
+    # def foreign_key(ref_name)
+    #   @foreign_keys << ref_name
+    # end
 
     def build!
       query_start = "CREATE TABLE #{@table_name} ("

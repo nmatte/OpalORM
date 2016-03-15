@@ -13,14 +13,15 @@ module OpalORM
 
     def new(db_name)
       Util.ensure_db_dir
-      db_file_path = File.join(Util.db_path, "#{db_name}")
-      puts "Creating db/#{db_name} ..."
+      name_with_ext = "#{db_name}.db"
+      db_file_path = File.join(Util.db_path, name_with_ext)
+      puts "Creating db/#{name_with_ext} ..."
       DBConnection.open(db_file_path)
       if File.exist?(db_file_path)
         Util.ensure_db_dir
         puts Util.db_path
-        Util.save_config({db_name: db_name})
-        puts "#{db_name} successfully created."
+        Util.save_config({db_name: name_with_ext})
+        puts "#{name_with_ext} successfully created."
       end
     end
     # TODO define next command

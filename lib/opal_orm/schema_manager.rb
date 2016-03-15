@@ -1,19 +1,12 @@
 require_relative 'util'
 require_relative 'query_builder'
-
+require_relative 'db_connection'
 module OpalORM
   class SchemaManager
     Util.ensure_db_dir
 
-    def self.test
-      puts "test"
-    end
-
     def self.generate(file_name, *table_names)
-      puts "are you seeing this"
-      puts Util.db_path
       schema_path = File.join(Util.db_path, "#{file_name}.rb")
-      puts schema_path
       if File.exist?(schema_path)
         raise FileExistsError, "#{file_name}.rb already exists. Please choose a different filename."
       else
@@ -22,7 +15,7 @@ module OpalORM
           contents = []
           if table_names.empty?
             contents << <<-RB
-OpalORM::SchemaManager.create_table("table_name") do |t|
+create_table("table_name") do |t|
 end
             RB
           else
@@ -32,7 +25,6 @@ end
           end
             contents.unshift(comment_string)
           end
-          puts contents
           f.write(contents.join)
           puts "Done."
         end
@@ -41,7 +33,7 @@ end
 
     def self.create_table_from_name(table_name)
       <<-RB
-SchemaManager.create_table \'#{table_name}\' do |t|
+create_table \'#{table_name}\' do |t|
 
 end
       RB
@@ -50,7 +42,7 @@ end
     def comment_string
       <<-RB
 # Example usage:
-# SchemaManager.create_table 'table_name' do |t|
+# create_table 'table_name' do |t|
 #   t.string column_name
 # end
 #
@@ -60,9 +52,10 @@ end
 
     def create_table(table_name, &prc)
       q = QueryBuilder.create_table_query(table_name, &prc)
-      puts q
-    end
 
+
+      DBConnection.execute(q)
+    end
   end
 
   class FileExistsError < StandardError

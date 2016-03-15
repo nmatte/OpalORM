@@ -33,19 +33,25 @@ load "#{spec.gem_dir}/lib/tasks/opal_db.rake"
 
 ## Usage
 
+### Database setup
+
 To start, run:
 
-    $ opal_orm create
+    $ opal_orm create DATABASE_NAME
 
-which will create an empty Sqlite database in ./db/opal.db.
+which will create an empty Sqlite database in ./db/DATABASE_NAME.db.
 
 Then, run:
 
     $ opal_orm generate SCHEMA_NAME TABLE1 TABLE2 ...
 
-Where SCHEMA_NAME is the name of the new schema, TABLE1, TABLE2 etc. are the names
+Where `SCHEMA_NAME` is the name of the new schema, `TABLE1`, `TABLE2` etc. are the names
 of the tables you'd like to generate. You can define more tables in the schema file if you
 need to.
+
+The schema file will be placed in `./db/SCHEMA_NAME.rb`.
+
+Inside your schema file, define each table in a `create_table` block.
 
 For example,
 
@@ -71,7 +77,7 @@ CREATE TABLE table_name (
 
 (The primary key column is generated automatically.)
 
-Currently, the only supported column types are string and integer.
+Currently, the only supported column types are string and integer. More to come!
 
 <!-- ## Development
 

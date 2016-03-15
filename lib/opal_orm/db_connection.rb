@@ -26,11 +26,13 @@ module OpalORM
     #   DBConnection.open(CATS_DB_FILE)
     # end
     #
-    # def self.instance
-    #   reset if @db.nil?
-    #
-    #   @db
-    # end
+    def self.instance
+      if Util.get_database_path
+        @db = open(Util.get_database_path)
+      end
+
+      @db
+    end
 
     def self.execute(*args)
       print_query(*args)

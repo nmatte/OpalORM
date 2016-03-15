@@ -20,7 +20,14 @@ module OpalORM
 
     def self.get_config
       if File.exists?(Util.config_path)
-        config = JSON.parse(File.read(Util.config_path))|| {}
+        JSON.parse(File.read(Util.config_path))|| {}
+      end
+    end
+
+    def self.get_database_path
+      db_name = get_config["db_name"]
+      if db_name
+        File.join(db_path, db_name)
       end
     end
 

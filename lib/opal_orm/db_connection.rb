@@ -10,28 +10,6 @@ PRINT_QUERIES = ENV['PRINT_QUERIES'] == 'true'
 
 module OpalORM
   class DBConnection
-    def self.get_config
-      if File.exists?(CONFIG_PATH)
-        config = JSON.parse(File.read(CONFIG_PATH))|| {}
-        p config
-      end
-    end
-
-    def self.make_config
-      Util.ensure_db_dir
-
-      unless File.exists?(CONFIG_PATH)
-        File.new(CONFIG_PATH, 'w')
-      end
-    end
-
-    def self.save_config(new_config)
-      File.open(CONFIG_PATH, "w+") do |f|
-        f.write(new_config.to_json)
-      end
-
-    end
-
     def self.open(db_file_name)
       @db = SQLite3::Database.new(db_file_name)
       @db.results_as_hash = true

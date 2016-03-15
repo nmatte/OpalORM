@@ -12,6 +12,30 @@ module OpalORM
       SQL
     end
 
+    def initialize(params = {})
+      params.each do |attribute,val|
+        col_sym = attribute.to_sym
+        if self.class.columns.include?(col_sym)
+          self.send("#{col_sym}=",val)
+        else
+          raise "unknown attribute '#{attribute}'"
+        end
+      end
+    end
+
+    def insert
+      columns = self.class.columns#.reject { |c| c.nil?}
+      cols = columns.join(", ")
+      placeholders = (["?"] * columns.length).join(", ")
+      DBConnection.execute(<<-SQL,*attribute_values)
+      INSERT INTO
+        #{self.class.table_name}(#{cols})
+      VALUES
+        (#{placeholders})
+      SQL
+      attributes[:id] = DBConnection.last_insert_row_id
+    end
+
     def self.finalize!
       columns.each do |col_sym|
         define_method(col_sym) do
@@ -32,12 +56,16 @@ module OpalORM
     end
 
     def self.all
-      objs = DBConnection.execute(<<-SQL)
+      query = <<-SQL
       SELECT
         *
       FROM
         #{self.table_name}
       SQL
+      puts "executing #{query}"
+      DBConnection.execute(query) do |row|
+        p row
+      end
       parse_all(objs)
     end
 
@@ -62,16 +90,7 @@ module OpalORM
       new(result.first)
     end
 
-    def initialize(params = {})
-      params.each do |attribute,val|
-        col_sym = attribute.to_sym
-        if self.class.columns.include?(col_sym)
-          self.send("#{col_sym}=",val)
-        else
-          raise "unknown attribute '#{attribute}'"
-        end
-      end
-    end
+
 
     def attributes
       @attributes ||= {}
@@ -83,18 +102,7 @@ module OpalORM
       end
     end
 
-    def insert
-      columns = self.class.columns#.reject { |c| c.nil?}
-      cols = columns.join(", ")
-      placeholders = (["?"] * columns.length).join(", ")
-      DBConnection.execute(<<-SQL,*attribute_values)
-      INSERT INTO
-        #{self.class.table_name}(#{cols})
-      VALUES
-        (#{placeholders})
-      SQL
-      attributes[:id] = DBConnection.last_insert_row_id
-    end
+
 
     def update
       cols = self.class

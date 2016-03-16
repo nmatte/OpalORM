@@ -39,7 +39,7 @@ To start, run:
 
     $ opal_orm create DATABASE_NAME
 
-which will create an empty Sqlite database in ./db/DATABASE_NAME.db.
+which will create an empty Sqlite database in `./db/DATABASE_NAME.db`.
 
 Then, run:
 
@@ -59,8 +59,6 @@ For example,
 create_table("table_name") do |t|
   t.integer :int_field
   t.string :string_field
-
-  t.foreign_key :int_field
 end
 ```
 
@@ -71,8 +69,6 @@ CREATE TABLE table_name (
   id INTEGER PRIMARY KEY,
   int_field INTEGER,
   string_field VARCHAR(255),
-
-  FOREIGN KEY(int_field) REFERENCES table_name(id));
 ```
 
 (The primary key column is generated automatically.)

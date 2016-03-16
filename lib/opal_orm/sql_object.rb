@@ -3,15 +3,6 @@ require 'active_support/inflector'
 
 module OpalORM
   class SQLObject
-    def self.columns
-      @cols ||= DBConnection.execute2(<<-SQL).first.map(&:to_sym)
-        SELECT
-          *
-        FROM
-          #{table_name}
-      SQL
-    end
-
     def initialize(params = {})
       params.each do |attribute,val|
         col_sym = attribute.to_sym
@@ -21,6 +12,15 @@ module OpalORM
           raise "unknown attribute '#{attribute}'"
         end
       end
+    end
+
+    def self.columns
+      @cols ||= DBConnection.execute2(<<-SQL).first.map(&:to_sym)
+      SELECT
+      *
+      FROM
+      #{table_name}
+      SQL
     end
 
     def insert
@@ -38,12 +38,20 @@ module OpalORM
 
     def self.finalize!
       columns.each do |col_sym|
-        define_method(col_sym) do
-          attributes[col_sym]
-        end
-        define_method("#{col_sym}=") do |new_val|
-          attributes[col_sym] = new_val
-        end
+        define_getter(col_sym)
+        define_setter(col_sym)
+      end
+    end
+
+    def self.define_getter(attr_name)
+      define_method(attr_name) do
+        attributes[attr_name]
+      end
+    end
+
+    def self.define_setter(attr_name)
+      define_method("#{attr_name}=") do |new_val|
+        attributes[attr_name] = new_val
       end
     end
 
@@ -87,8 +95,6 @@ module OpalORM
       new(result.first)
     end
 
-
-
     def attributes
       @attributes ||= {}
     end
@@ -98,8 +104,6 @@ module OpalORM
         attributes[col]
       end
     end
-
-
 
     def update
       cols = self.class
@@ -118,6 +122,26 @@ module OpalORM
 
     def save
       id.nil? ? insert : update
+    end
+
+    def self.is_column?(col_sym)
+      self.columns.include?(col_sym)
+    end
+
+    def method_missing(method_sym, *args)
+      if self.class.is_column?(method_sym)
+        self.class.define_getter(method_sym)
+        return send(method_sym)
+      end
+
+      setter_name = /(.*)=/.match(method_sym)
+      if setter_name && self.class.is_column?(setter_name[1].to_sym)
+        self.class.define_setter(setter_name[1].to_sym)
+        p method_sym
+        send(method_sym, args[0])
+      else
+        super(method_sym, args)
+      end
     end
   end
 end

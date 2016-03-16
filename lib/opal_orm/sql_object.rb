@@ -62,10 +62,7 @@ module OpalORM
       FROM
         #{self.table_name}
       SQL
-      puts "executing #{query}"
-      DBConnection.execute(query) do |row|
-        p row
-      end
+      objs = DBConnection.execute(query)
       parse_all(objs)
     end
 

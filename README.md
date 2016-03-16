@@ -56,9 +56,9 @@ Inside your schema file, define each table in a `create_table` block.
 For example,
 
 ```ruby
-create_table("table_name") do |t|
-  t.integer :int_field
-  t.string :string_field
+create_table("cats") do |t|
+  t.string :name
+  t.integer :toy_count
 end
 ```
 
@@ -67,15 +67,40 @@ corresponds to
 ```sql
 CREATE TABLE table_name (
   id INTEGER PRIMARY KEY,
-  int_field INTEGER,
-  string_field VARCHAR(255),
+  name VARCHAR(255),
+  toy_count INTEGER
+);
 ```
 
 (The primary key column is generated automatically.)
 
 Currently, the only supported column types are string and integer. More to come!
 
+Once your schema file is ready, run the following rake task to convert it to SQL
+and add it do the database:
 
+    $ rake opal_db:setup schema=SCHEMA_FILE
+
+### Using OpalORM::SQLObject
+
+To use OpalORM's core features, inherit your models from `OpalORM::SQLObject`:
+
+```ruby
+class Cat < OpalORM::SQLObject
+end
+```
+
+Instantiate a class like normal, then access data using `all`, `find`, and `where`:
+
+```ruby
+c = Cat.new
+c.name = "Mr. Bojangles"
+c.save
+
+puts Cat.find(1).name
+puts Cat.all
+puts Cat.where(name: "Mr. Bojangles")
+```
 
 <!-- ## Development
 

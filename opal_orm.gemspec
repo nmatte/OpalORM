@@ -10,7 +10,8 @@ Gem::Specification.new do |spec|
   spec.email         = ["nwmatteson@gmail.com"]
 
   spec.summary       = %q{OpalORM is a small object-relational mapper for Ruby.}
-  spec.description   = %q{OpalORM is a small object-relational mapper for Ruby.}
+  spec.description   = %q{OpalORM is a lightweight object-relational mapper for Ruby. With it you
+  can define a schema for your models, and then set up relations between them for easy access in your project.}
   spec.homepage      = "http://github.com/nmatte/OpalORM"
   spec.license       = "MIT"
 
@@ -32,7 +33,7 @@ Gem::Specification.new do |spec|
 
   spec.add_runtime_dependency 'sqlite3', '1.3.11'
   spec.add_dependency 'thor','0.19.1'
-  spec.add_dependency 'activesupport'
+  spec.add_dependency 'activesupport', '4.2.5'
   spec.add_development_dependency "bundler", "~> 1.11"
   spec.add_development_dependency "rake", "~> 10.0"
   spec.add_development_dependency "rspec", "~> 3.0"

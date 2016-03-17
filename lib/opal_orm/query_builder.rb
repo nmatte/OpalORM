@@ -31,19 +31,19 @@ module OpalORM
 
     def build!
       query_start = "CREATE TABLE #{@table_name} ("
-      column_queries = @columns.map do |colInfo|
+      column_queries = @columns.map do |col_info|
         result = []
-        case colInfo[:type]
+        case col_info[:type]
         when :string
-          result = "#{colInfo[:name]} VARCHAR(255) "
+          result = "#{col_info[:name]} VARCHAR(255) "
         when :integer
-          result = "#{colInfo[:name]} INTEGER "
+          result = "#{col_info[:name]} INTEGER "
         end
-        unless colInfo[:options].nil?
-          colInfo[:options].each do |key|
-            case colInfo[:options]
+        unless col_info[:options].nil?
+          col_info[:options].each do |key|
+            case col_info[:options]
             when :null
-              result += "NOT NULL" unless colInfo[:options][:null]
+              result += "NOT NULL" unless col_info[:options][:null]
             end
           end
         end

@@ -22,7 +22,7 @@ Or install it yourself as:
 
     $ gem install opal_orm
 
-In the root folder of your project, create a filed named `Rakefile` if you don't have one already.
+In the root folder of your project, create a file named `Rakefile` if you don't have one already.
 
 Paste the following into your Rakefile:
 
@@ -65,7 +65,7 @@ end
 corresponds to
 
 ```sql
-CREATE TABLE table_name (
+CREATE TABLE cats (
   id INTEGER PRIMARY KEY,
   name VARCHAR(255),
   toy_count INTEGER
@@ -77,7 +77,7 @@ CREATE TABLE table_name (
 Currently, the only supported column types are string and integer. More to come!
 
 Once your schema file is ready, run the following rake task to convert it to SQL
-and add it do the database:
+and add it to the database:
 
     $ rake opal_db:setup schema=SCHEMA_FILE
 

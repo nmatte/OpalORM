@@ -48,7 +48,8 @@ module Associatable
   def has_many(name, options = {})
     define_method(name) do
       @options = HasManyOptions.new(name,self.class.to_s,options)
-      cats = @options.model_class.where(@options.foreign_key => id)
+      # TODO: why is this here?
+      # cats = @options.model_class.where(@options.foreign_key => id)
     end
   end
 
@@ -60,7 +61,7 @@ module Associatable
     define_method(name) do
       through_options = self.class.assoc_options[through_name]
       source_options = through_options.model_class.assoc_options[source_name]
-      pk = 1
+
       through =
         through_options.model_class
         .where(through_options.primary_key => id)

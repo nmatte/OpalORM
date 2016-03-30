@@ -37,7 +37,7 @@ load "#{spec.gem_dir}/lib/tasks/opal_db.rake"
 
 To start, run:
 
-    $ opal_orm create DATABASE_NAME
+    $ opal_orm new DATABASE_NAME
 
 which will create an empty Sqlite database in `./db/DATABASE_NAME.db`.
 
@@ -59,6 +59,7 @@ For example,
 create_table("cats") do |t|
   t.string :name
   t.integer :toy_count
+  t.float :weight
 end
 ```
 
@@ -69,6 +70,7 @@ CREATE TABLE cats (
   id INTEGER PRIMARY KEY,
   name VARCHAR(255),
   toy_count INTEGER
+  weight REAL
 );
 ```
 

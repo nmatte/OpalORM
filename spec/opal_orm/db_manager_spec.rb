@@ -32,6 +32,21 @@ describe 'OpalORM::QueryBuilder' do
       SQL
     end
 
+    it 'creates the correct query for floats' do
+      table_name = "test_table"
+      col_name = "float_column"
+      query = OpalORM::QueryBuilder.create_table_query(table_name) do |t|
+        t.float col_name
+      end
+
+      expect(remove_whitespace(query)).to eq(remove_whitespace(<<-SQL))
+        CREATE TABLE #{table_name} (
+          id INTEGER PRIMARY KEY,
+          #{col_name} REAL
+        );
+      SQL
+    end
+
     it 'creates the correct query for foreign keys' do
       table_name = "test_table"
       col_name = "integer_column"

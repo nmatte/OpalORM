@@ -25,6 +25,14 @@ module OpalORM
       @columns << {type: :integer, name: name, options: options}
     end
 
+    def float(name, *options)
+      @columns << {type: :float, name: name, options: options}
+    end
+
+    def text(name, *options)
+      @columns << {type: :text, name: name, options: options}
+    end
+
     # def foreign_key(ref_name)
     #   @foreign_keys << ref_name
     # end
@@ -32,22 +40,27 @@ module OpalORM
     def build!
       query_start = "CREATE TABLE #{@table_name} ("
       column_queries = @columns.map do |col_info|
-        result = []
+        result = ["#{col_info[:name]}"]
         case col_info[:type]
         when :string
-          result = "#{col_info[:name]} VARCHAR(255) "
+          result << "VARCHAR(255)"
         when :integer
-          result = "#{col_info[:name]} INTEGER "
+          result << "INTEGER"
+        when :float
+          result << "REAL"
+        when :text
+          result << "TEXT"
         end
+
         unless col_info[:options].nil?
           col_info[:options].each do |key|
             case col_info[:options]
             when :null
-              result += "NOT NULL" unless col_info[:options][:null]
+              result << "NOT NULL" unless col_info[:options][:null]
             end
           end
         end
-        result
+        result.join(" ")
       end
       column_queries.unshift("id INTEGER PRIMARY KEY")
 
@@ -55,7 +68,7 @@ module OpalORM
         if foreign_key_valid?(ref_name)
           "FOREIGN KEY(#{ref_name}) REFERENCES #{@table_name.singularize}(id)"
         else
-          raise ForeignKeyMissingError, "Error adding foreign key contsraint for #{ref_name}: couldn't find column named #{ref_name}."
+          raise ForeignKeyMissingError, "Error adding foreign key constraint for #{ref_name}: couldn't find column named #{ref_name}."
         end
       end
 

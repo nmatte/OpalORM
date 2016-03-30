@@ -60,6 +60,7 @@ create_table("cats") do |t|
   t.string :name
   t.integer :toy_count
   t.float :weight
+  t.text :biography
 end
 ```
 
@@ -76,7 +77,7 @@ CREATE TABLE cats (
 
 (The primary key column is generated automatically.)
 
-Currently, the only supported column types are string and integer. More to come!
+Currently, the only supported column types are string, float, text, and integer. More to come!
 
 Once your schema file is ready, run the following rake task to convert it to SQL
 and add it to the database:

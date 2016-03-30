@@ -70,8 +70,9 @@ corresponds to
 CREATE TABLE cats (
   id INTEGER PRIMARY KEY,
   name VARCHAR(255),
-  toy_count INTEGER
-  weight REAL
+  toy_count INTEGER,
+  weight REAL,
+  biography TEXT
 );
 ```
 

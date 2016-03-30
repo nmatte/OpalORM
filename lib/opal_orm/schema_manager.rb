@@ -39,7 +39,7 @@ end
       RB
     end
 
-    def comment_string
+    def self.comment_string
       <<-RB
 # Example usage:
 # create_table 'table_name' do |t|

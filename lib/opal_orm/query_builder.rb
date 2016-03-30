@@ -2,6 +2,13 @@ require 'active_support/inflector'
 
 module OpalORM
   class QueryBuilder
+    DATATYPES = {
+    string: "VARCHAR(255)",
+    integer: "INTEGER",
+    float: "REAL",
+    text: "TEXT"
+    }
+
     def self.create_table_query(name, &prc)
       manager = new(name)
       prc.call(manager)
@@ -39,18 +46,10 @@ module OpalORM
 
     def build!
       query_start = "CREATE TABLE #{@table_name} ("
+      
       column_queries = @columns.map do |col_info|
         result = ["#{col_info[:name]}"]
-        case col_info[:type]
-        when :string
-          result << "VARCHAR(255)"
-        when :integer
-          result << "INTEGER"
-        when :float
-          result << "REAL"
-        when :text
-          result << "TEXT"
-        end
+        result << get_datatype_string(col_info[:type])
 
         unless col_info[:options].nil?
           col_info[:options].each do |key|
@@ -60,6 +59,7 @@ module OpalORM
             end
           end
         end
+
         result.join(" ")
       end
       column_queries.unshift("id INTEGER PRIMARY KEY")
@@ -78,11 +78,18 @@ module OpalORM
       @query
     end
 
+    def get_datatype_string(type)
+      DATATYPES[type]
+    end
+
     def foreign_key_valid?(key)
       @columns.any? {|col| key == col[:name]}
     end
   end
 
   class ForeignKeyMissingError < StandardError
+  end
+
+  class DatatypeMissingError < StandardError
   end
 end
